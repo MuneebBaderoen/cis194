@@ -83,3 +83,35 @@ validate :: Integer -> Bool
 validate num = (calculateChecksum num == 0)
 
 calculateChecksum num = (sumDigits (doubleEveryOther (toDigits num))) `mod` 10
+
+-- Exercise 5
+
+type PegLabel = String
+type Move = (Peg, Peg)
+type Peg = (PegLabel, [Disc])
+type Disc = Integer
+
+generateDiscs :: Integer -> [Integer]
+generateDiscs numDiscs = take (fromIntegral numDiscs) [1..]
+
+generatePegs :: [PegLabel] -> [Peg]
+generatePegs pegLabels = map createPeg pegLabels
+
+createPeg :: PegLabel -> Peg
+createPeg pegLabel = (pegLabel, [])
+
+addDiscsToPeg :: Peg -> [Disc] -> Peg
+addDiscsToPeg peg discs = (fst peg, concat [discs, (snd peg)])
+
+addDiscsToFirstPeg :: [Peg] -> [Disc] -> [Peg]
+addDiscsToFirstPeg (p:pegs) discs = (addDiscsToPeg p discs) : pegs
+
+hanoi :: Integer -> PegLabel -> PegLabel -> PegLabel -> [Move]
+hanoi numDiscs pegA pegB pegC =
+  (hanoiPerform
+    (addDiscsToFirstPeg
+      (generatePegs [pegA, pegB, pegC])
+      (generateDiscs numDiscs)))
+
+hanoiPerform :: [Peg] -> [Move]
+hanoiPerform pegs = []
